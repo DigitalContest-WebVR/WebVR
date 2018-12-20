@@ -1,0 +1,41 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Empiricism</title>
+    <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+    <script src="https://npmcdn.com/aframe-event-set-component@3.0.1"></script>
+    <script src="{% static 'Scripts/ScoreGetter.js' %}"></script>
+  </head>
+
+  <body>
+    <a-scene>
+      <a-asset>
+        <a-asset-item id="dome" src="{% static 'Resources/Dome.glb' %}"></a-asset-item>
+      </a-asset>
+
+      <a-gltf-model src="#dome" scale="0.2 0.2 0.2"></a-gltf-model>
+      <a-gltf-model src="#dome" scale="0.2 0.2 0.2" rotation="180 0 0"></a-gltf-model>
+
+      <a-text score-getter position="0 2 -5" width="16" align="center"></a-text>
+
+      <a-link class="link" href="{% url 'game' %}" title="Retry" image="#linkTexture" position="-1.5 -0.5 -5"></a-link>
+      <a-link class="link" href="{% url 'main' %}" title="Main" image="#linkTexture" position="1.5 -0.5 -5"></a-link>
+
+      <a-camera universal-controls>
+        <a-cursor
+          intersection-spawn="event: click"
+          animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150"
+          animation__fusing="property: fusing; startEvents: fusing; from: 1 1 1; to: 0.1 0.1 0.1; dur: 1500"
+          event-set__1="_event: mouseenter; color: springgreen"
+          event-set__2="_event: mouseleave; color: black"
+          raycaster="objects: .link">
+        </a-cursor>
+      </a-camera>
+
+    </a-scene>
+
+  </body>
+</html>

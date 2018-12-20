@@ -15,18 +15,20 @@ AFRAME.registerComponent('automove', {
 
     var tmpPos = new THREE.Vector3().copy(player.object3D.position);
 
+    tmpPos.add(camera.object3D.position);
+
     tmpPos.add(step);
     var distanceWithOrigin = tmpPos.distanceTo(new THREE.Vector3(0, 0, 0));
 
-    if(distanceWithOrigin > 48)
+    if(distanceWithOrigin > 120)
     {
-      player.setAttribute('position', {x : 0, y : 0, z : 0});
+      player.setAttribute('position', {x : 0, y : 3, z : 0});
 
       player.emit('decreaseHp', {damage:20});
     }
     else
     {
-      if(tmpPos.y < 0)
+      if(tmpPos.y < 1.5)
       {
         step.y = 0;
       }

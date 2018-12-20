@@ -7,25 +7,61 @@
     <title>Empiricism</title>
     <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
     <script src="https://npmcdn.com/aframe-event-set-component@3.0.1"></script>
+    <script type="text/javascript">
+      AFRAME.registerComponent('ranking', {
+
+          init: function()
+          {
+            var data = {{ ranks|safe }};
+
+            console.log(data[0].fields.score);
+
+            var newObjectEl;
+
+            for (i = 0; i < data.length; i++)
+            {
+              newObjectEl = document.createElement('a-text');
+              newObjectEl.setAttribute('value', (i+1) + ". " + data[i].fields.score);
+              newObjectEl.setAttribute('position', {x : 0, y : i * -0.6, z : 0});
+              newObjectEl.setAttribute('width', 13);
+              newObjectEl.setAttribute('align', 'center');
+              this.el.appendChild(newObjectEl);
+            }
+          }
+      });
+
+    </script>
   </head>
 
-  <body>
+  <body id="data" data="{{ ranks }}">
     <a-scene>
       <a-asset>
-        <img id = "skyTexture" src = "../static/Resources/bg.png">
-        <img id = "logoTexture" src = "../static/Resources/logo.png">
-        <img id = "linkTexture" src = "../static/Resources/linka.png">
+        <img id = "skyTexture" src = "{% static 'Resources/bg.png' %}">
+        <img id = "logoTexture" src = "{% static 'Resources/logo.png' %}">
+        <img id = "linkTexture" src = "{% static 'Resources/linka.png' %}">
+        <a-asset-item id="dome" src="{% static 'Resources/Dome.glb' %}"></a-asset-item>
+        <a-asset-item id="healpack" src="{% static 'Resources/healpack.glb' %}"></a-asset-item>
+        <a-asset-item id="obstacle" src="{% static 'Resources/obstacle.glb' %}"></a-asset-item>
+        <a-asset-item id="scorepack" src="{% static 'Resources/scorepack.glb' %}"></a-asset-item>
       </a-asset>
-      
-      <a-sky radius="10" src="#skyTexture"></a-sky>
 
-      <a-image src="#logoTexture" position="0 4 -3" width="4" height="3"></a-image>
-      
-      <a-link class="link" href="{% url 'game' %}" title="Start" image="#linkTexture" position="0 0.5 -3">
-      </a-link>
-    
+      <a-gltf-model src="#dome" scale="0.2 0.2 0.2"></a-gltf-model>
+      <a-gltf-model src="#dome" scale="0.2 0.2 0.2" rotation="180 0 0"></a-gltf-model>
+
+      <a-image src="#logoTexture" position="0 2.5 -5" width="5" height="5"></a-image>
+      <a-link class="link" href="{% url 'game' %}" title="Start" image="#linkTexture" position="0 -0.5 -5"></a-link>
+
+      <a-text value="Heal Pack     Obstacle     Score Pack" width="13" position="5 3 -5" rotation="0 -90 0"></a-text>
+      <a-entity gltf-model="#healpack" scale="0.01 0.01 0.01" position="5 0 -3.5" rotation="0 90 0"></a-entity>
+      <a-entity gltf-model="#obstacle" scale="0.03 0.03 0.03" position="5 0.7 -0.5" rotation="0 90 0"></a-entity>
+      <a-entity gltf-model="#scorepack" scale="0.01 0.01 0.01" position="5 0.7 2.5" rotation="0 90 0"></a-entity>
+
+      <a-entity ranking position="-5 2 0" rotation="0 90 0" >
+        <a-text value="Ranking" width="20" align="center" position="0 1.1 0"></a-text>
+      </a-entity>
+
       <a-camera universal-controls>
-        <a-cursor 
+        <a-cursor
           intersection-spawn="event: click"
           animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150"
           animation__fusing="property: fusing; startEvents: fusing; from: 1 1 1; to: 0.1 0.1 0.1; dur: 1500"
@@ -33,8 +69,10 @@
           event-set__2="_event: mouseleave; color: black"
           raycaster="objects: .link">
         </a-cursor>
+
+        <a-sound src="{% static 'Sounds/BGM.mp3' %}" autoplay="true" position="0 2 5"></a-sound>
       </a-camera>
-    
+
     </a-scene>
 
   </body>

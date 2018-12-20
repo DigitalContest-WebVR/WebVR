@@ -1,7 +1,10 @@
 AFRAME.registerComponent('audio-handler', {
+  schema:{
+    audioID: {type: 'string', default:""}
+  },
 
   init:function() {
-     var audio = document.querySelector("#crash");
+     var audio = document.querySelector(this.data.audioID);
 
      this.el.addEventListener('soundPlay', function()
      {

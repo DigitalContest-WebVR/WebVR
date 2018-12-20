@@ -1,22 +1,26 @@
 AFRAME.registerComponent('score', {
     schema:
     {
-        score:{type: 'number', default: 0},
+        scoreCount:{type: 'number', default: 0},
     },
 
     init: function()
     {
+        var itemAudio = document.querySelector('#item-audio');
 
+        var scoreCount = this.data.scoreCount;
+        var el = this.el;
+
+        this.el.addEventListener('addScore', function(evt){
+
+            scoreCount += evt.detail.score;
+
+            el.setAttribute('value', "Score: " + Math.floor(scoreCount));
+         });
     },
 
     tick: function(time, timeDelta)
     {
-      var el = this.el;
-
-      this.data.score += timeDelta;
-
-      var score = "Score : " + Math.floor(this.data.score * 0.025);
-
-      el.setAttribute('value', score);
+        this.el.emit('addScore', {score: timeDelta * 0.025});
     },
 });

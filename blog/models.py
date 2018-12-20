@@ -1,3 +1,8 @@
 from django.db import models
+from django.utils import timezone
 
-# Create your models here.
+class Rank(models.Model):
+    score = models.IntegerField()
+
+    def __str__(self):
+        return str(self.score)

@@ -6,47 +6,55 @@
     <meta charset="utf-8">
     <title>Empiricism</title>
     <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
-    <script src="../static/Scripts/CameraControl.js"></script>
-    <script src="../static/Scripts/bundle.js"></script>
-    <script src="../static/Scripts/Player.js"></script>
-    <script src="../static/Scripts/EnemyGenerator.js"></script>
-    <script src="../static/Scripts/Enemy.js"></script>
-    <script src="../static/Scripts/Score.js"></script>
-    <script src="../static/Scripts/EnterVR.js"></script>
-    <script src="/static/Scripts/AudioHandler.js"></script>
-    
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="{% static 'Scripts/CameraControl.js' %}"></script>
+    <script src="{% static 'Scripts/bundle.js' %}"></script>
+    <script src="{% static 'Scripts/Player.js' %} "></script>
+    <script src="{% static 'Scripts/Generator.js' %}"></script>
+    <script src="{% static 'Scripts/Object.js' %}"></script>
+    <script src="{% static 'Scripts/Score.js' %}"></script>
+    <script src="{% static 'Scripts/EnterVR.js' %}"></script>
+    <script src="{% static 'Scripts/AudioHandler.js' %}"></script>
+    <!-- <script src="{% static 'Scripts/Link.js' %}"></script> -->
+    {% csrf_token %}
+    <script src="{% static 'Scripts/SceneUpdater.js' %}"></script>
   </head>
 
   <body>
-    <a-scene physics="debug: false; gravity: 0" enter-vr-mode>
+    <a-scene id="scene" physics="debug: false; gravity: 0" updater>
       <a-asset>
-       <img id = "skyTexture" src = "../static/Resources/bg.png">
-       <a-asset-item id="dome" src="/static/Resources/Dome.glb"></a-asset-item>
+       <img id = "skyTexture" src="{% static 'Resources/bg.png' %}">
+       <a-asset-item id="dome" src="{% static 'Resources/Dome.glb' %}"></a-asset-item>
+       <a-asset-item id="healpack" src="{% static 'Resources/healpack.glb' %}"></a-asset-item>
+       <a-asset-item id="scorepack" src="{% static 'Resources/scorepack.glb' %}"></a-asset-item>
+       <a-asset-item id="obstacle" src="{% static 'Resources/obstacle.glb' %}"></a-asset-item>
+
+       <audio id="crash" src="{% static 'Sounds/Crash.mp3' %}"></audio>
+       <audio id="item" src="{% static 'Sounds/Item.mp3' %}"></audio>
+
+        <a-mixin id="object" object static-body="shape: sphere"></a-mixin>
+        <a-mixin id="player-body" dynamic-body="shape: sphere"></a-mixin>
       </a-asset>
 
+      <a-gltf-model src="#dome" scale="0.2 0.2 0.2"></a-gltf-model>
+      <a-cylinder id="ground" radius="126" height="0.1" color="#0C0421"></a-cylinder>
 
-      <a-mixin id="enemy" enemy static-body></a-mixin>
-      <a-mixin id="player-body" dynamic-body="shape: sphere"></a-mixin>
-
-      <a-gltf-model src="#dome" scale="0.08 0.08 0.08"></a-gltf-model>
-      <a-cylinder id="ground" radius="52" height="0.1" color="#000000"></a-cylinder>
-
-      <a-entity id="player" collision-able player-body player position="0 3 3">
-        <a-camera automove universal-controls>
+      <a-entity id="player" collision-able player-body player position="0 3 0">
+        <a-camera automove universal-controls position="0 -0.5 0">
           <a-cursor intersection-spawn="event: click"></a-cursor>
-          <a-text score value="Score : 0" position="0.1 0.5 -1" width="2"></a-text>
+          <a-text id="score" score value="Score : 0" position="0.1 0.5 -1" width="2"></a-text>
           <a-text id="hp" value="HP : 100" position="0.1 0.4 -1" width="2"></a-text>
-          
-          <audio id="crash" src="/static/Sounds/Crash.mp3"></audio>
-          <a-sound src="/static/Sounds/BGM.mp3" autoplay="true" position="0 2 5"></a-sound>
-          <a-entity id="audio-handler" audio-handler src="/static/Sounds/Crash.mp3"></a-entity>
+
+          <a-entity id="item-audio" audio-handler="audioID: #item" src="{% static 'Sounds/Item.mp3' %}"></a-entity>
+          <a-entity id="crash-audio" audio-handler="audioID: #crash" src="{% static 'Sounds/Crash.mp3' %}"></a-entity>
+          <a-sound src="{% static 'Sounds/BGM.mp3' %}" autoplay="true" position="0 2 5"></a-sound>
         </a-camera>
       </a-entity>
 
-      <a-entity enemy-generator></a-entity>
+      <a-entity generator></a-entity>
 
-      <a-link id="link" href="{% url 'main' %}" title="Main" position="0 -5 0" visible="false"></a-link>
-
+      <!-- <a-link id="toResult" href="{% url 'result' %}" visible="false" ></a-link>
+      <a-link id="toMain" href="{% url 'main' %}" visible="false" my-link></a-link> -->
     </a-scene>
 
   </body>

@@ -13,14 +13,39 @@ AFRAME.registerComponent('collision-able', {
 
       setTimeout(function() {
         var playerEl = document.querySelector('#player');
+        var scoreEl = document.querySelector('#score');
+        var objectEl;
 
-        if (playerEl == e.detail.target.el) {
-          document.querySelector('a-scene').removeChild(e.detail.body.el);
-          e.detail.target.el.emit('decreaseHp', {damage:5});
+        if (playerEl == e.detail.target.el)
+        {
+            objectEl = e.detail.body.el;
         }
-        else {
-          document.querySelector('a-scene').removeChild(e.detail.target.el);
-          e.detail.body.el.emit('decreaseHp', {damage:5});
+        else if(playerEl == e.detail.body.el)
+        {
+            objectEl = e.detail.target.el;
+        }
+
+        document.querySelector('a-scene').removeChild(objectEl);
+
+        var itemAudio = document.querySelector('#item-audio');
+
+        if(objectEl.getAttribute('id') == 'heal-item')
+        {
+            playerEl.emit('increaseHp', {heal:20});
+
+            itemAudio.emit('soundPlay');
+        }
+        else if(objectEl.getAttribute('id') == 'score-item')
+        {
+            scoreEl.emit('addScore', {score:100});
+
+            playerEl.emit('setUI');
+
+            itemAudio.emit('soundPlay');
+        }
+        else
+        {
+            playerEl.emit('decreaseHp', {damage:10});
         }
 
       }, 0);

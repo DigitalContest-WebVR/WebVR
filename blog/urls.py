@@ -8,5 +8,7 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^$', views.main, name='main'),
-    url(r'^game/$', views.game, name="game"),
+    url(r'^game/$', views.game, name='game'),
+    url(r'^update/$', views.update, name='update'),
+    url(r'^result/$', views.result, name='result'),
 ]

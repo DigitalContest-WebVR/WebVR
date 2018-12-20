@@ -1,4 +1,4 @@
-AFRAME.registerComponent('enemy', {
+AFRAME.registerComponent('object', {
     schema:
     {
       direction: {type: 'vec3', default: {x : 0, y : 0, z : 0}},
@@ -18,7 +18,7 @@ AFRAME.registerComponent('enemy', {
 
       var position = this.el.object3D.position;
       var playerPosition = player.object3D.position;
-      
+
       x = playerPosition.x - position.x;
       y = playerPosition.y - position.y;
       z = playerPosition.z - position.z;
@@ -26,6 +26,15 @@ AFRAME.registerComponent('enemy', {
       var direction = new THREE.Vector3(x, y, z).normalize();
 
       this.data.direction = direction;
+
+      if(this.el.getAttribute('id') == 'heal-item' || this.el.getAttribute('id') == 'score-item')
+      {
+        this.data.step = 0.15;
+      }
+      else
+      {
+        this.data.step *= 5;
+      }
     },
 
     tick: function(time, timeDelta)
@@ -38,7 +47,7 @@ AFRAME.registerComponent('enemy', {
 
         var distanceWithOrigin = el.object3D.position.distanceTo(new THREE.Vector3(0, 0, 0));
 
-        if (distanceWithOrigin >= 55 || el.object3D.position.y < -3) {
+        if (distanceWithOrigin >= 130 || el.object3D.position.y < -3) {
           el.parentNode.removeChild(el);
         }
 
